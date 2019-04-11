@@ -58,7 +58,7 @@ class KMeans():
 ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
 ##  AND CHANGE FOR YOUR OWN CODE
 #######################################################
-        self.X = np.random.rand(100,5)
+        self.X = 3*len(X[0])*len(X[1])
 
             
     def _init_options(self, options):
