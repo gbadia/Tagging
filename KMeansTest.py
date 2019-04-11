@@ -10,7 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
-import TeachersKMeans as km
+import KMeans as km
 
 
 plt.close("all")
