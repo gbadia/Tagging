@@ -10,10 +10,10 @@ from sklearn.decomposition import PCA
 
 
 def NIUs():
-    return 111111, 1111112, 1111113
+    return 1458626, 1111112, 1111113
     
 def distance(X,C):
-    """@brief   Calculates the distance between each pixcel and each centroid 
+    """@brief   Calculates the distance between each pixel and each centroid 
 
     @param  X  numpy array PxD 1st set of data points (usually data points)
     @param  C  numpy array KxD 2nd set of data points (usually cluster centroids points)
@@ -54,11 +54,7 @@ class KMeans():
 
         sets X an as an array of data in vector form (PxD  where P=N*M and D=3 in the above example)
         """
-#######################################################
-##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
-##  AND CHANGE FOR YOUR OWN CODE
-#######################################################
-        self.X = 3*len(X[0])*len(X[1])
+        self.X = X.reshape(np.prod(X.shape[:-1]), 3)
 
             
     def _init_options(self, options):
@@ -110,12 +106,8 @@ class KMeans():
         """@brief Initialization of centroids
         depends on self.options['km_init']
         """
-#######################################################
-##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
-##  AND CHANGE FOR YOUR OWN CODE
-#######################################################
         if self.options['km_init'].lower() == 'first':
-	        self.centroids = np.random.rand(self.K,self.X.shape[1])
+                self.centroids = np.array(list({tuple(row) for row in self.X})[:self.K])
         else:
 	        self.centroids = np.random.rand(self.K,self.X.shape[1])
         
@@ -123,32 +115,22 @@ class KMeans():
     def _cluster_points(self):
         """@brief   Calculates the closest centroid of all points in X
         """
-#######################################################
-##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
-##  AND CHANGE FOR YOUR OWN CODE
-#######################################################
-        self.clusters = np.random.randint(self.K,size=self.clusters.shape)
+        #self.clusters = np.random.randint(self.K,size=self.clusters.shape)
+        self.clusters = np.array([[np.linalg.norm(c-p) for c in self.centroids] for p in self.X]).argmin(axis=1)
 
         
     def _get_centroids(self):
         """@brief   Calculates coordinates of centroids based on the coordinates 
                     of all the points assigned to the centroid
         """
-#######################################################
-##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
-##  AND CHANGE FOR YOUR OWN CODE
-#######################################################
-        pass
+        self.old_centroids = np.copy(self.centroids)
+        self.centroids = np.array([np.mean(self.X[np.where(self.clusters==c)], axis=0) for c in range(len(self.centroids))])
                 
 
     def _converges(self):
         """@brief   Checks if there is a difference between current and old centroids
         """
-#######################################################
-##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
-##  AND CHANGE FOR YOUR OWN CODE
-#######################################################
-        return True
+        return not np.any(np.linalg.norm(self.centroids-self.old_centroids, axis=1)>self.options['tolerance'])
         
     def _iterate(self, show_first_time=True):
         """@brief   One iteration of K-Means algorithm. This method should 
@@ -172,7 +154,7 @@ class KMeans():
         
         self._iterate(True)
         if self.options['max_iter'] > self.num_iter:
-            while not self._converges() :
+            while not self._converges():
                 self._iterate(False)
       
       
