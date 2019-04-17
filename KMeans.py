@@ -21,11 +21,7 @@ def distance(X,C):
     @return dist: PxK numpy array position ij is the distance between the 
     	i-th point of the first set an the j-th point of the second set
     """
-#########################################################
-##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
-##  AND CHANGE FOR YOUR OWN CODE
-#########################################################
-    return np.random.rand(X.shape[0],C.shape[0])
+    return np.array([[np.linalg.norm(c-p) for c in C] for p in X])
 
 class KMeans():
     
@@ -167,15 +163,18 @@ class KMeans():
                     information for the best K. NO need to rerun KMeans.
            @return B is the best K found.
         """
-#######################################################
-##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
-##  AND CHANGE FOR YOUR OWN CODE
-#######################################################
-        self._init_rest(4)
-        self.run()        
+        self.k = 1
         fit = self.fitting()
-        return 4
-
+        ant = fit
+        ant2 = ant
+        while (ant-fit)*2 < (ant2 - ant):
+            self._init_rest(self.k)
+            self.run()
+            ant2 = ant
+            ant = fit
+            fit = self.fitting()
+            self.k += 1
+        return self.k
         
     def fitting(self):
         """@brief  return a value describing how well the current kmeans fits the data
