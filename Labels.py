@@ -112,11 +112,24 @@ def processImage(im, options):
 
 ##  1- CHANGE THE IMAGE TO THE CORRESPONDING COLOR SPACE FOR KMEANS
     if options['colorspace'].lower() == 'ColorNaming'.lower():  
-        pass
+        im = cn.ImColorNamingTSELabDescriptor(im)
     elif options['colorspace'].lower() == 'RGB'.lower():        
         pass 
     elif options['colorspace'].lower() == 'Lab'.lower():        
-        pass
+        im = color.rgb2lab(im)
+    elif options['colorspace'].lower() == 'HED'.lower():        
+        im = color.rgb2hed(im)
+    elif options['colorspace'].lower() == 'HSV'.lower():        
+        im = color.rgb2hsv(im)
+    '''
+    elif options['colorspace'].lower() == 'opponent'.lower():        
+        im = color.rgb2lab(im)
+    elif options['colorspace'].lower() == 'HSL'.lower():        
+        im = color.rgb2(im)
+    elif options['colorspace'].lower() == 'Lab'.lower():        
+        im = color.rgb2lab(im)
+    '''
+
 
 ##  2- APPLY KMEANS ACCORDING TO 'OPTIONS' PARAMETER
     if options['K']<2: # find the bes K
@@ -127,8 +140,14 @@ def processImage(im, options):
         kmeans.run()
 
 ##  3- GET THE NAME LABELS DETECTED ON THE 11 DIMENSIONAL SPACE
-    if options['colorspace'].lower() == 'RGB'.lower():        
-        pass     
+    if options['colorspace'].lower() == 'Lab'.lower():        
+        kmeans.centroids = cn.ImColorNamingTSELabDescriptor(color.lab2rgb(kmeans.centroids))
+    elif options['colorspace'].lower() == 'HED'.lower():        
+        kmeans.centroids = cn.ImColorNamingTSELabDescriptor(color.hed2rgb(kmeans.centroids))
+    elif options['colorspace'].lower() == 'HSV'.lower():        
+        kmeans.centroids = cn.ImColorNamingTSELabDescriptor(color.hsv2rgb(kmeans.centroids))
+    elif options['colorspace'].lower() == 'RGB'.lower():        
+        kmeans.centroids = cn.ImColorNamingTSELabDescriptor(kmeans.centroids)
 
 #########################################################
 ##  THE FOLLOWING 2 END LINES SHOULD BE KEPT UNMODIFIED
