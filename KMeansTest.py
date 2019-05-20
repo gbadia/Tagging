@@ -17,7 +17,7 @@ plt.close("all")
 if __name__ == "__main__":
     import os
     print(os.path.dirname(os.path.realpath(__file__)))
-    im = io.imread('Images/0053.jpg')
+    im = io.imread('Images/0053.png')
     # plt.figure(1)
     # plt.imshow(im)
     # plt.axis('off')

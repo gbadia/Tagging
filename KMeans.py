@@ -104,8 +104,11 @@ class KMeans():
         """
         if self.options['km_init'].lower() == 'first':
                 self.centroids = np.array(list({tuple(row) for row in self.X})[:self.K])
-        else:
+        elif self.options['km_init'].lower() == 'random':
 	        self.centroids = np.random.rand(self.K,self.X.shape[1])
+        if self.options['km_init'].lower() == 'spaced':
+                self.centroids=np.zeros((self.K, self.X.shape[1]))
+                for k in range(self.K): self.centroids[k, :] = k*255/(self.K-1)
         
         
     def _cluster_points(self):
@@ -179,13 +182,12 @@ class KMeans():
     def fitting(self):
         """@brief  return a value describing how well the current kmeans fits the data
         """
-#######################################################
-##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
-##  AND CHANGE FOR YOUR OWN CODE
-#######################################################
         if self.options['fitting'].lower() == 'fisher':
-            return np.random.rand(1)
-        else:
+            intra = np.array([[np.linalg.norm(c-p)/(np.sum(self.clusters==c)) for c in self.centroids] for p in self.X]).sum()/self.K
+            center = np.mean(self.X,axis=0)
+            inter = np.array([np.linalg.norm(c-center) for c in self.centroids]).sum()/self.K
+            return intra/inter
+        elif self.options['fitting'].lower() == 'silhouette':
             return np.random.rand(1)
 
 
