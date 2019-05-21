@@ -103,19 +103,21 @@ class KMeans():
         depends on self.options['km_init']
         """
         if self.options['km_init'].lower() == 'first':
-                self.centroids = np.array(list({tuple(row) for row in self.X})[:self.K])
+                self.centroids = np.array([list(b) for b in list(dict.fromkeys([tuple(row) for row in self.X]))][:self.K])
         elif self.options['km_init'].lower() == 'random':
 	        self.centroids = np.random.rand(self.K,self.X.shape[1])
         if self.options['km_init'].lower() == 'spaced':
                 self.centroids=np.zeros((self.K, self.X.shape[1]))
                 for k in range(self.K): self.centroids[k, :] = k*255/(self.K-1)
         
-        
     def _cluster_points(self):
         """@brief   Calculates the closest centroid of all points in X
         """
         #self.clusters = np.random.randint(self.K,size=self.clusters.shape)
-        self.clusters = np.array([[np.linalg.norm(c-p) for c in self.centroids] for p in self.X]).argmin(axis=1)
+        #print(distance(self.X, self.centroids)[:100][-6:])
+        #self.clusters = np.array([[np.linalg.norm(c-p) for c in self.centroids] for p in self.X]).argmin(axis=1)
+        #self.clusters = np.array([[np.linalg.norm(c-p) for c in self.centroids] for p in self.X]).argmin(axis=1)
+        self.clusters = distance(self.X, self.centroids).argmin(axis=1)
 
         
     def _get_centroids(self):
