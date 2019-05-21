@@ -103,7 +103,7 @@ class KMeans():
         depends on self.options['km_init']
         """
         if self.options['km_init'].lower() == 'first':
-                self.centroids = np.array([list(b) for b in list(dict.fromkeys([tuple(row) for row in self.X]))][:self.K])
+                self.centroids = np.array([list(b) for b in list(dict.fromkeys([tuple(row) for row in self.X]))][:self.K], dtype=np.float64)
         elif self.options['km_init'].lower() == 'random':
 	        self.centroids = np.random.rand(self.K,self.X.shape[1])
         if self.options['km_init'].lower() == 'spaced':
