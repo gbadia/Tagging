@@ -166,18 +166,20 @@ class KMeans():
                     information for the best K. NO need to rerun KMeans.
            @return B is the best K found.
         """
-        self.k = 1
+        K = 1
+        self._init_rest(K)
+        self.run()
         fit = self.fitting()
         ant = fit
         ant2 = ant
         while (ant-fit)*2 < (ant2 - ant):
-            self._init_rest(self.k)
+            self._init_rest(K)
             self.run()
             ant2 = ant
             ant = fit
             fit = self.fitting()
-            self.k += 1
-        return self.k
+            K += 1
+        return K
         
     def fitting(self):
         """@brief  return a value describing how well the current kmeans fits the data
