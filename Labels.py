@@ -150,11 +150,11 @@ def processImage(im, options):
 
 ##  3- GET THE NAME LABELS DETECTED ON THE 11 DIMENSIONAL SPACE
     if options['colorspace'].lower() == 'Lab'.lower():
-        kmeans.centroids = cn.ImColorNamingTSELabDescriptor(color.lab2rgb(kmeans.centroids.reshape(1,len(kmeans.centroids),3)).reshape(len(kmeans.centroids),3))
+        kmeans.centroids = cn.ImColorNamingTSELabDescriptor((color.lab2rgb(kmeans.centroids.reshape(1,len(kmeans.centroids),3))*255).reshape(len(kmeans.centroids),3))
     elif options['colorspace'].lower() == 'HED'.lower():
         kmeans.centroids = cn.ImColorNamingTSELabDescriptor(color.hed2rgb(kmeans.centroids.reshape(1,len(kmeans.centroids),3)).reshape(len(kmeans.centroids),3))
     elif options['colorspace'].lower() == 'HSV'.lower():
-        kmeans.centroids = cn.ImColorNamingTSELabDescriptor(color.hsv2rgb(kmeans.centroids.reshape(1,len(kmeans.centroids),3)).reshape(len(kmeans.centroids),3))
+        kmeans.centroids = cn.ImColorNamingTSELabDescriptor((color.hsv2rgb(kmeans.centroids.reshape(1,len(kmeans.centroids),3))*255).reshape(len(kmeans.centroids),3))
     elif options['colorspace'].lower() == 'RGB'.lower():
         kmeans.centroids = cn.ImColorNamingTSELabDescriptor(kmeans.centroids)
 
