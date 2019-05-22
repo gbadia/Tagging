@@ -105,7 +105,7 @@ class KMeans():
         if self.options['km_init'].lower() == 'first':
                 self.centroids = np.array([list(b) for b in list(dict.fromkeys([tuple(row) for row in self.X]))][:self.K], dtype=np.float64)
         elif self.options['km_init'].lower() == 'random':
-	        self.centroids = np.random.rand(self.K,self.X.shape[1])
+	        self.centroids = self.X[np.random.choice(self.X.shape[0], self.K, replace=False), :]
         if self.options['km_init'].lower() == 'spaced':
                 self.centroids=np.zeros((self.K, self.X.shape[1]))
                 for k in range(self.K): self.centroids[k, :] = k*255/(self.K-1)
