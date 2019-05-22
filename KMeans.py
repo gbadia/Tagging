@@ -187,7 +187,7 @@ class KMeans():
         """@brief  return a value describing how well the current kmeans fits the data
         """
         if self.options['fitting'].lower() == 'fisher':
-            intra = np.array([[np.linalg.norm(c-p)/(np.sum(self.clusters==c)) for c in self.centroids] for p in self.X]).sum()/self.K
+            intra = np.array([[np.linalg.norm(self.centroids[i]-p)/(np.sum(self.clusters==i)) for i in range(len(self.centroids))] for p in self.X]).sum()/self.K
             center = np.mean(self.X,axis=0)
             inter = np.array([np.linalg.norm(c-center) for c in self.centroids]).sum()/self.K
             return intra/inter
