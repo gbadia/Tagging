@@ -39,11 +39,7 @@ def evaluate(description, GT, options):
     @return mean_score,scores mean_score FLOAT is the mean of the scores of each image
                               scores     LIST contain the similiraty between the ground truth list of color names and the obtained
     """
-#########################################################
-##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
-##  AND CHANGE FOR YOUR OWN CODE
-#########################################################
-    scores[]
+    scores = [0] * len(description)
     for i in range (0, len(description)):
         scores[i] = similarityMetric(description[i], GT[i], options)
     return sum(scores)/len(description), scores
@@ -87,16 +83,50 @@ def getLabels(kmeans, options):
     @return colors  LIST    colors labels of centroids of kmeans object
     @return ind     LIST    indexes of centroids with the same color label
     """
+    colors = {}
+    for i in range (0,kmeans.K):
+        num1 = 0
+        num2 = 0
+        id1 = 0
+        id2 = 0
+        trobat = 0
+        if np.sum(kmeans.centroids[i]) > 1:
+            for x in np.nditer(kmeans.centroids[i], op_flags=['readwrite']):
+                if x != 0:
+                    x /= np.sum(kmeans.centroids[i])
 
-#########################################################
-##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
-##  AND CHANGE FOR YOUR OWN CODE
-#########################################################
-##  remind to create composed labels if the probability of
-##  the best color label is less than  options['single_thr']
-    meaningful_colors = ['color'+'%d'%i for i in range(kmeans.K)]
-    unique = range(kmeans.K)
-    return meaningful_colors, unique
+
+        for j in range(0, len(kmeans.centroids[0])):
+            if kmeans.centroids[i][j] >= kmeans.options['single_thr']:
+                idAux = j
+                trobat = 1
+                break
+            if kmeans.centroids[i][j] > num1:
+                id1 = j
+                num1 = kmeans.centroids[i][j]
+            elif kmeans.centroids[i][j] > num2:
+                id2 = j
+                num2 = kmeans.centroids[i][j]
+        if (trobat == 0):
+            idAux = id1,id2
+        if idAux not in colors.keys():
+            colors[idAux] = [] #nem trobat un
+            colors[idAux].append(i)
+        else:
+            colors[idAux].append(i)
+    colors_trobats = []
+    for key in colors:
+        if isinstance(key, tuple):
+            l = []
+
+            l.append(cn.colors[key[0]])
+            l.append(cn.colors[key[1]])
+            l = sorted(l)
+            colors_trobats.append(l[0] + l[1])
+        else:
+            colors_trobats.append(cn.colors[key])
+    #retornar colors i num de centroide del color
+    return colors_trobats, colors.values()
 
 
 def processImage(im, options):
