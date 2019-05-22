@@ -10,13 +10,13 @@ from skimage import color
 import KMeans as km
 
 def NIUs():
-    return 111111, 222222, 3333333
+    return 1458383, 222222, 3333333
 
 def loadGT(fileName):
     """@brief   Loads the file with groundtruth content
-    
+
     @param  fileName  STRING    name of the file with groundtruth
-    
+
     @return groundTruth LIST    list of tuples of ground truth data
                                 (Name, [list-of-labels])
     """
@@ -27,7 +27,7 @@ def loadGT(fileName):
         splitLine = line.split(' ')[:-1]
         labels = [''.join(sorted(filter(None,re.split('([A-Z][^A-Z]*)',l)))) for l in splitLine[1:]]
         groundTruth.append( (splitLine[0], labels) )
-        
+
     return groundTruth
 
 
@@ -43,7 +43,9 @@ def evaluate(description, GT, options):
 ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
 ##  AND CHANGE FOR YOUR OWN CODE
 #########################################################
-    scores = np.random.rand(len(description),1)        
+    scores[]
+    for i in range (0, len(description)):
+        scores[i] = similarityMetric(description[i], GT[i], options)
     return sum(scores)/len(description), scores
 
 
@@ -55,28 +57,33 @@ def similarityMetric(Est, GT, options):
     @param options DICT  contains options to control metric, ...
     @return S float similarity between label LISTs
     """
-    
+
     if options == None:
         options = {}
     if not 'metric' in options:
         options['metric'] = 'basic'
-        
+
 #########################################################
 ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
 ##  AND CHANGE FOR YOUR OWN CODE
 #########################################################
-    if options['metric'].lower() == 'basic'.lower():
-        import random
-        return random.uniform(0, 1)        
+    comptador = 0
+    if options['metric'].lower() == 'basic':
+        for i in Est:
+            if i in GT:
+                comptador = comptador + 1
+
+        return comptador / len(Est)
+
     else:
         return 0
-        
+
 def getLabels(kmeans, options):
     """@brief   Labels all centroids of kmeans object to their color names
-    
+
     @param  kmeans  KMeans      object of the class KMeans
     @param  options DICTIONARY  options necessary for labeling
-    
+
     @return colors  LIST    colors labels of centroids of kmeans object
     @return ind     LIST    indexes of centroids with the same color label
     """
@@ -85,7 +92,7 @@ def getLabels(kmeans, options):
 ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
 ##  AND CHANGE FOR YOUR OWN CODE
 #########################################################
-##  remind to create composed labels if the probability of 
+##  remind to create composed labels if the probability of
 ##  the best color label is less than  options['single_thr']
     meaningful_colors = ['color'+'%d'%i for i in range(kmeans.K)]
     unique = range(kmeans.K)
@@ -94,10 +101,10 @@ def getLabels(kmeans, options):
 
 def processImage(im, options):
     """@brief   Finds the colors present on the input image
-    
+
     @param  im      LIST    input image
     @param  options DICTIONARY  dictionary with options
-    
+
     @return colors  LIST    colors of centroids of kmeans object
     @return indexes LIST    indexes of centroids with the same label
     @return kmeans  KMeans  object of the class KMeans
@@ -111,22 +118,22 @@ def processImage(im, options):
 #########################################################
 
 ##  1- CHANGE THE IMAGE TO THE CORRESPONDING COLOR SPACE FOR KMEANS
-    if options['colorspace'].lower() == 'ColorNaming'.lower():  
+    if options['colorspace'].lower() == 'ColorNaming'.lower():
         im = cn.ImColorNamingTSELabDescriptor(im)
-    elif options['colorspace'].lower() == 'RGB'.lower():        
-        pass 
-    elif options['colorspace'].lower() == 'Lab'.lower():        
+    elif options['colorspace'].lower() == 'RGB'.lower():
+        pass
+    elif options['colorspace'].lower() == 'Lab'.lower():
         im = color.rgb2lab(im)
-    elif options['colorspace'].lower() == 'HED'.lower():        
+    elif options['colorspace'].lower() == 'HED'.lower():
         im = color.rgb2hed(im)
-    elif options['colorspace'].lower() == 'HSV'.lower():        
+    elif options['colorspace'].lower() == 'HSV'.lower():
         im = color.rgb2hsv(im)
     '''
-    elif options['colorspace'].lower() == 'opponent'.lower():        
+    elif options['colorspace'].lower() == 'opponent'.lower():
         im = color.rgb2lab(im)
-    elif options['colorspace'].lower() == 'HSL'.lower():        
+    elif options['colorspace'].lower() == 'HSL'.lower():
         im = color.rgb2(im)
-    elif options['colorspace'].lower() == 'Lab'.lower():        
+    elif options['colorspace'].lower() == 'Lab'.lower():
         im = color.rgb2lab(im)
     '''
 
@@ -136,21 +143,21 @@ def processImage(im, options):
         kmeans = km.KMeans(im, 0, options)
         kmeans.bestK()
     else:
-        kmeans = km.KMeans(im, options['K'], options) 
+        kmeans = km.KMeans(im, options['K'], options)
         kmeans.run()
 
 ##  3- GET THE NAME LABELS DETECTED ON THE 11 DIMENSIONAL SPACE
-    if options['colorspace'].lower() == 'Lab'.lower():        
+    if options['colorspace'].lower() == 'Lab'.lower():
         kmeans.centroids = cn.ImColorNamingTSELabDescriptor(color.lab2rgb(kmeans.centroids))
-    elif options['colorspace'].lower() == 'HED'.lower():        
+    elif options['colorspace'].lower() == 'HED'.lower():
         kmeans.centroids = cn.ImColorNamingTSELabDescriptor(color.hed2rgb(kmeans.centroids))
-    elif options['colorspace'].lower() == 'HSV'.lower():        
+    elif options['colorspace'].lower() == 'HSV'.lower():
         kmeans.centroids = cn.ImColorNamingTSELabDescriptor(color.hsv2rgb(kmeans.centroids))
-    elif options['colorspace'].lower() == 'RGB'.lower():        
+    elif options['colorspace'].lower() == 'RGB'.lower():
         kmeans.centroids = cn.ImColorNamingTSELabDescriptor(kmeans.centroids)
 
 #########################################################
 ##  THE FOLLOWING 2 END LINES SHOULD BE KEPT UNMODIFIED
 #########################################################
-    colors, which = getLabels(kmeans, options)   
+    colors, which = getLabels(kmeans, options)
     return colors, which, kmeans
