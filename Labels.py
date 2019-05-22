@@ -41,7 +41,6 @@ def evaluate(description, GT, options):
     """
     scores = [0] * len(description)
     for i in range (0, len(description)):
-        #print(description[i], GT[i])
         scores[i] = similarityMetric(description[i], GT[i], options)
     return sum(scores)/len(description), scores
 
@@ -67,9 +66,8 @@ def similarityMetric(Est, GT, options):
     comptador = 0
     if options['metric'].lower() == 'basic':
         for i in Est:
-            if i in GT:
+            if i in GT[1]:
                 comptador = comptador + 1
-
         return comptador / len(Est)
 
     else:
