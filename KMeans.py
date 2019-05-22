@@ -50,7 +50,7 @@ class KMeans():
 
         sets X an as an array of data in vector form (PxD  where P=N*M and D=3 in the above example)
         """
-        self.X = X.reshape(np.prod(X.shape[:-1]), 3)
+        self.X = X.reshape(np.prod(X.shape[:-1]), X.shape[-1])
 
 
     def _init_options(self, options):
