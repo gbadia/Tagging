@@ -41,6 +41,7 @@ def evaluate(description, GT, options):
     """
     scores = [0] * len(description)
     for i in range (0, len(description)):
+        #print(description[i], GT[i])
         scores[i] = similarityMetric(description[i], GT[i], options)
     return sum(scores)/len(description), scores
 
@@ -151,11 +152,11 @@ def processImage(im, options):
 
 ##  3- GET THE NAME LABELS DETECTED ON THE 11 DIMENSIONAL SPACE
     if options['colorspace'].lower() == 'Lab'.lower():
-        kmeans.centroids = cn.ImColorNamingTSELabDescriptor(color.lab2rgb(kmeans.centroids))
+        kmeans.centroids = cn.ImColorNamingTSELabDescriptor(color.lab2rgb(kmeans.centroids.reshape(1,len(kmeans.centroids),3)).reshape(len(kmeans.centroids),3))
     elif options['colorspace'].lower() == 'HED'.lower():
-        kmeans.centroids = cn.ImColorNamingTSELabDescriptor(color.hed2rgb(kmeans.centroids))
+        kmeans.centroids = cn.ImColorNamingTSELabDescriptor(color.hed2rgb(kmeans.centroids.reshape(1,len(kmeans.centroids),3)).reshape(len(kmeans.centroids),3))
     elif options['colorspace'].lower() == 'HSV'.lower():
-        kmeans.centroids = cn.ImColorNamingTSELabDescriptor(color.hsv2rgb(kmeans.centroids))
+        kmeans.centroids = cn.ImColorNamingTSELabDescriptor(color.hsv2rgb(kmeans.centroids.reshape(1,len(kmeans.centroids),3)).reshape(len(kmeans.centroids),3))
     elif options['colorspace'].lower() == 'RGB'.lower():
         kmeans.centroids = cn.ImColorNamingTSELabDescriptor(kmeans.centroids)
 
