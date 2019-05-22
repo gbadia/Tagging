@@ -10,7 +10,7 @@ from skimage import color
 import KMeans as km
 
 def NIUs():
-    return 1458383, 222222, 3333333
+    return 1458383, 1458626, 3333333
 
 def loadGT(fileName):
     """@brief   Loads the file with groundtruth content
@@ -97,7 +97,7 @@ def getLabels(kmeans, options):
                     x /= np.sum(kmeans.centroids[i])
 
         for j in range(0, len(kmeans.centroids[0])):
-            if kmeans.centroids[i][j] >= kmeans.options['single_thr']: """Superem el llindar"""
+            if kmeans.centroids[i][j] >= kmeans.options['single_thr']: #Superem el llindar
                 posicioAux = j
                 trobat = True
                 break
