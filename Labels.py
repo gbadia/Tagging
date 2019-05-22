@@ -83,58 +83,23 @@ def getLabels(kmeans, options):
     @return colors  LIST    colors labels of centroids of kmeans object
     @return ind     LIST    indexes of centroids with the same color label
     """
-    colors = {}
-    for i in range (0, kmeans.K):
-        primer = 0
-        segon = 0
-        posicio1 = 0
-        posicio2 = 0
-        trobat = False
-
-        if np.sum(kmeans.centroids[i]) > 1:
-            for x in np.nditer(kmeans.centroids[i], op_flags=['readwrite']):
-                if x != 0:
-                    x /= np.sum(kmeans.centroids[i])
-
-        for j in range(0, len(kmeans.centroids[0])):
-            if kmeans.centroids[i][j] >= kmeans.options['single_thr']: #Superem el llindar
-                posicioAux = np.argmax(kmeans.centroids[i])
-                trobat = True
-                break
-
-            if kmeans.centroids[i][j] > primer:
-                posicio1 = j
-                primer = kmeans.centroids[i][j]
-
-            elif kmeans.centroids[i][j] > segon:
-                posicio2 = j
-                segon = kmeans.centroids[i][j]
-
-        if trobat == False:
-            posicioAux = posicio1,posicio2
-
-        if posicioAux not in colors.keys():
-            colors[posicioAux] = []
-            colors[posicioAux].append(i)
-
+    colors = []
+    unics=[]
+    for i, c in enumerate(kmeans.centroids):
+        sc=np.flip(np.argsort(c))
+        color=""
+        if c[sc[0]]>options['single_thr']:
+           color=cn.colors[sc[0]]
         else:
-            colors[posicioAux].append(i)
-    Els_colors = []
-
-    for key in colors:
-        if isinstance(key, tuple):
-            l = []
-
-            l.append(cn.colors[key[0]])
-            l.append(cn.colors[key[1]])
-            l = sorted(l)
-            Els_colors.append(l[0] + l[1])
-
+           colorSort=sorted([cn.colors[sc[0]], cn.colors[sc[1]]])
+           color=colorSort[0]+colorSort[1]
+        if color in colors:
+            unics[colors.index(color)].append(i)
         else:
-            Els_colors.append(cn.colors[key])
+            colors.append(color)
+            unics.append([i])
 
-
-    return Els_colors, colors.values()
+    return colors, unics
 
 
 def processImage(im, options):
