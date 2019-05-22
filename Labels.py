@@ -98,7 +98,7 @@ def getLabels(kmeans, options):
 
         for j in range(0, len(kmeans.centroids[0])):
             if kmeans.centroids[i][j] >= kmeans.options['single_thr']: #Superem el llindar
-                posicioAux = j
+                posicioAux = np.argmax(kmeans.centroids[i])
                 trobat = True
                 break
 
