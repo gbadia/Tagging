@@ -84,37 +84,43 @@ def getLabels(kmeans, options):
     @return ind     LIST    indexes of centroids with the same color label
     """
     colors = {}
-    for i in range (0,kmeans.K):
-        num1 = 0
-        num2 = 0
-        id1 = 0
-        id2 = 0
-        trobat = 0
+    for i in range (0, kmeans.K):
+        primer = 0
+        segon = 0
+        posicio1 = 0
+        posicio2 = 0
+        trobat = False
+
         if np.sum(kmeans.centroids[i]) > 1:
             for x in np.nditer(kmeans.centroids[i], op_flags=['readwrite']):
                 if x != 0:
                     x /= np.sum(kmeans.centroids[i])
 
-
         for j in range(0, len(kmeans.centroids[0])):
-            if kmeans.centroids[i][j] >= kmeans.options['single_thr']:
-                idAux = j
-                trobat = 1
+            if kmeans.centroids[i][j] >= kmeans.options['single_thr']: """Superem el llindar"""
+                posicioAux = j
+                trobat = True
                 break
-            if kmeans.centroids[i][j] > num1:
-                id1 = j
-                num1 = kmeans.centroids[i][j]
-            elif kmeans.centroids[i][j] > num2:
-                id2 = j
-                num2 = kmeans.centroids[i][j]
-        if (trobat == 0):
-            idAux = id1,id2
-        if idAux not in colors.keys():
-            colors[idAux] = [] #nem trobat un
-            colors[idAux].append(i)
+
+            if kmeans.centroids[i][j] > primer:
+                posicio1 = j
+                primer = kmeans.centroids[i][j]
+
+            elif kmeans.centroids[i][j] > segon:
+                posicio2 = j
+                segon = kmeans.centroids[i][j]
+
+        if trobat == False:
+            posicioAux = posicio1,posicio2
+
+        if posicioAux not in colors.keys():
+            colors[posicioAux] = []
+            colors[posicioAux].append(i)
+
         else:
-            colors[idAux].append(i)
-    colors_trobats = []
+            colors[posicioAux].append(i)
+    Els_colors = []
+
     for key in colors:
         if isinstance(key, tuple):
             l = []
@@ -122,11 +128,13 @@ def getLabels(kmeans, options):
             l.append(cn.colors[key[0]])
             l.append(cn.colors[key[1]])
             l = sorted(l)
-            colors_trobats.append(l[0] + l[1])
+            Els_colors.append(l[0] + l[1])
+
         else:
-            colors_trobats.append(cn.colors[key])
-    #retornar colors i num de centroide del color
-    return colors_trobats, colors.values()
+            Els_colors.append(cn.colors[key])
+
+
+    return Els_colors, colors.values()
 
 
 def processImage(im, options):
