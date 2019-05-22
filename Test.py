@@ -20,6 +20,8 @@ else:
     import Labels as lb
     import KMeans as km
 
+
+
 student = True
 TestFolder = 'Test/'
 ImageFolder = 'Images/'
@@ -249,7 +251,7 @@ def TestSolution(Test, Options, GTFile, NImage, tests):
         Options['single_thr'] *= 1.10
         
         lab,ind,k_m = lb.processImage(im, Options)
-        lab = lab[:-2]
+        print(lab)
         Results.append(CheckTest(Message, lab, File, student))
         Messages.append(Message)
 
@@ -303,7 +305,7 @@ Options = {'colorspace':'ColorNaming', 'K':3, 'km_init':'first', 'fitting':'Fish
 score.append(TestSolution(3, Options, GTFile, 143, [1,3,4,5,6,7,8,9,10,11]))
 
 Options = {'colorspace':'Lab', 'K':3, 'km_init':'first', 'fitting':'Fisher', 'single_thr':0.6, 'metric':'basic', 'verbose':False}
-score.append(TestSolution(5, Options, GTFile, 43, [1,3,4,5,6,9,10,11]))
+score.append(TestSolution(4, Options, GTFile, 43, [1,3,4,5,6,9,10,11]))
 
 Options = {'colorspace':'RGB', 'K':3, 'km_init':'first', 'fitting':'Fisher', 'single_thr':0.6, 'metric':'basic', 'verbose':False}
 score.append(TestSolution(5, Options, GTFile, 0, [1,3,4,5,6,9,10,11]))
